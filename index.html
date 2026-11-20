@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LR·AI — 不依赖 Lightroom 的参数化调色工作台</title>
-<meta name="description" content="macOS 原生修图 App:自研 Lightroom 式参数空间与渲染引擎,约 60 个滑杆,直读 RAW,不改原片;AI 调色助手由本机 claude CLI 驱动,不上传原图。零第三方依赖。">
+<meta name="description" content="macOS 原生修图 App:Lightroom 式参数化调色,约 60 个滑杆,直读相机 RAW,不改原片;AI 调色助手跑在你自己的 Mac 上,不上传原图。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="LR·AI — 不依赖 Lightroom 的参数化调色工作台">
-<meta property="og:description" content="macOS 原生修图 App:约 60 个滑杆的参数化调色,直读 RAW,不改原片;AI 助手用本机 claude CLI,不上传原图。">
+<meta property="og:description" content="macOS 原生修图 App:约 60 个滑杆的参数化调色,直读 RAW,不改原片;AI 助手跑在本机,不上传原图。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23211f18'/%3E%3Ccircle cx='16' cy='16' r='9.5' fill='none' stroke='%23e8b04b' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%23e8b04b'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="./style.css">
 </head>
@@ -62,14 +62,14 @@
   <!-- Hero -->
   <section class="hero">
     <div class="wrap">
-      <p class="kicker">macOS 原生 · AppKit + ImageIO + Accelerate</p>
+      <p class="kicker">macOS 原生 · 参数化调色工作台</p>
       <h1>不依赖 Lightroom 的<br>参数化调色工作台</h1>
-      <p class="sub">自研的 Lightroom 式参数空间与渲染引擎,配上由你本机 <code>claude</code> CLI 驱动的调色 / 构图助手。<br>约 60 个滑杆、直读 RAW、不改原片、零第三方依赖。</p>
+      <p class="sub">Lightroom 式的调色体验,加上听得懂一句话的 AI 助手。<br>约 60 个滑杆、直读相机 RAW、原片永远不被改动。</p>
       <div class="badges">
-        <span>不改原片</span><span>AI 不上传原图</span><span>macOS 14+ · Apple silicon</span><span>零第三方依赖</span>
+        <span>不改原片</span><span>AI 不上传原图</span><span>照片不出你的 Mac</span><span>macOS 14+</span>
       </div>
       <div class="cta-row">
-        <a class="btn primary" href="#guide">本机构建上手</a>
+        <a class="btn primary" href="#guide">三步,装到你的 Mac</a>
         <a class="btn" href="#features">看看能做什么</a>
       </div>
 
@@ -142,10 +142,10 @@
   <!-- 数字带 -->
   <section class="numbers">
     <div class="wrap nums-in">
-      <div class="num"><b>60</b><span>个滑杆 · 对齐 Lightroom 参数空间</span></div>
-      <div class="num"><b>92.4<span class="unit">dB</span></b><span>引擎移植与参考实现逐位平价</span></div>
-      <div class="num"><b>1.8<span class="unit">s</span></b><span>24MP 全管线热跑(Accelerate)</span></div>
-      <div class="num"><b>0</b><span>第三方依赖 · SwiftPM 构建</span></div>
+      <div class="num"><b>60</b><span>个滑杆 · 从白平衡到颜色分级</span></div>
+      <div class="num"><b>1.8<span class="unit">s</span></b><span>渲染一张 2400 万像素照片</span></div>
+      <div class="num"><b>5</b><span>种对比视图 · 原片随时对照</span></div>
+      <div class="num"><b>0</b><span>次上传 · 照片不出你的 Mac</span></div>
     </div>
   </section>
 
@@ -172,7 +172,7 @@
         <div class="f-text">
           <h3>修图引擎</h3>
           <h4>一枚引擎,六十个滑杆</h4>
-          <p>白平衡、基础、色调曲线(RGB 分通道)、HSL、颜色分级、校准 —— 参数空间与 Lightroom「修改照片」一一对应。单击加点、拖出删点的 Pchip 曲线,分区滑杆全部程序生成。</p>
+          <p>白平衡、基础、色调曲线、HSL、颜色分级、校准 —— 和 Lightroom「修改照片」同一套参数。会用 Lightroom 的话,这里不用重新学。</p>
           <ul class="ticks">
             <li>裁剪与拉直,三分线 + 比例锁定</li>
             <li>编辑后 / 原图 / 左右 / 上下 / 幕帘,五种对比视图</li>
@@ -216,15 +216,15 @@
         <div class="f-text">
           <h3>无损流程</h3>
           <h4>原片永远是原片</h4>
-          <p>所有调整只是一份参数 JSON,存进照片所在文件夹的隐藏目录 <code>.lrai/</code>,改动自动保存;整张图只在导出的那一刻才渲染。删掉 <code>.lrai/</code>,一切如初。</p>
+          <p>所有调整单独记成一份「参数清单」,放在照片旁边的隐藏文件夹里,改动自动保存;导出时才按参数渲染成新图。原片,一个字节都不动。</p>
           <ul class="ticks">
             <li>参数、AI 对话、历史全在本地</li>
-            <li>导出 JPEG / HEIC / PNG / TIFF,可保留 EXIF(默认去 GPS)</li>
+            <li>导出 JPEG / HEIC / PNG / TIFF,拍摄信息默认保留、位置默认抹掉</li>
             <li>相机水印:白边 / 黑边信息条,内容逐项勾选</li>
           </ul>
         </div>
         <div class="f-visual">
-          <figure class="mock files-mock" role="img" aria-label="无损流程示意:原片与参数 JSON 分开存放,导出时才渲染">
+          <figure class="mock files-mock" role="img" aria-label="无损流程示意:原片与参数清单分开存放,导出时才渲染">
             <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">照片文件夹</span></div>
             <div class="files-flow">
               <div class="file-card">
@@ -233,12 +233,12 @@
               </div>
               <div class="flow-arrow">＋</div>
               <div class="file-card code-card">
-                <pre>.lrai/
-  params.json   → 曝光 +0.35
-                高光 −28
-                阴影 +32
-                曲线 …</pre>
-                <span>参数 · 自动保存<small>导出时才渲染整图</small></span>
+                <pre>参数清单 · 自动保存
+曝光      +0.35
+高光      −28
+阴影      +32
+色调曲线  …</pre>
+                <span>IMG_0421 · 参数<small>导出时才渲染整图</small></span>
               </div>
             </div>
           </figure>
@@ -249,15 +249,15 @@
         <div class="f-text">
           <h3>直读 RAW</h3>
           <h4>系统解码器,不用装任何库</h4>
-          <p>CR3 / CR2 / NEF / ARW / DNG 相机 RAW,加上 JPEG / PNG / HEIC / WebP / TIFF,全部走系统解码器;EXIF 方向自动应用,完整元数据 <kbd>⌘I</kbd> 一屏看完。</p>
+          <p>CR3 / CR2 / NEF / ARW / DNG 等相机 RAW,连同 JPEG、HEIC、PNG 等常见格式,拖进来直接开修;机身、镜头、曝光参数 <kbd>⌘I</kbd> 一屏看完。</p>
           <ul class="ticks">
             <li>合焦点显示:读相机记录的对焦框,Canon 眼部追踪实测落框在眼 / 脸</li>
-            <li>没有对焦数据时,按清晰度估计最清晰区域(虚线框)</li>
-            <li><code>lrai-check</code> 命令行工具,先验证你的片子再说话</li>
+            <li>没有对焦数据时,自动估计最清晰区域(虚线框)</li>
+            <li>横拍竖拍自动摆正,不用手动旋转</li>
           </ul>
         </div>
         <div class="f-visual">
-          <figure class="mock raw-mock" role="img" aria-label="RAW 格式与 EXIF 信息示意">
+          <figure class="mock raw-mock" role="img" aria-label="RAW 格式与拍摄信息示意">
             <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">IMG_0421.CR3 · 6000×4000</span></div>
             <div class="raw-body">
               <div class="raw-photo">
@@ -277,7 +277,7 @@
         <div class="f-text">
           <h3>历史树</h3>
           <h4>撤销之后再改,长出新的枝</h4>
-          <p>每张照片一棵历史树,每次改动是一个节点;800 毫秒内的连续拖动合并成一步,拖回原值自动撤掉。回到任何一步继续调,旧分支不会丢 —— 大胆试,不迷路。</p>
+          <p>每张照片一棵历史树,每次改动是一个节点;回到任何一步继续调,就长出新分支,旧分支不会丢。大胆试,不迷路。</p>
           <ul class="ticks">
             <li><kbd>⌘Z</kbd> / <kbd>⇧⌘Z</kbd> 撤销重做,head 在树上移动</li>
             <li>AI 的每次改动也只是历史里的一步</li>
@@ -335,11 +335,11 @@
   <section class="ai-sec" id="ai">
     <div class="wrap">
       <h2 class="sec-h">一句话,调一次色</h2>
-      <p class="sec-sub">「提亮阴影」「帮我重新构图」—— 也可以拖一张参考图进去,说「照这个感觉调」。App 拉起你本机的 <code>claude</code> CLI(headless 模式),实时看到它的思考与每一步操作。</p>
+      <p class="sec-sub">「提亮阴影」「帮我重新构图」—— 也可以拖一张参考图进去,说「照这个感觉调」。AI 就跑在你自己的 Mac 上,实时看到它的思考与每一步操作。</p>
 
       <div class="ai-grid">
         <figure class="mock chat-mock reveal" role="img" aria-label="AI 助手对话示意">
-          <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">调色助手 · claude(本机登录)</span></div>
+          <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">调色助手 · 本机 AI</span></div>
           <div class="chat-flow">
             <div class="bubble user">提亮阴影,整体再暖一点 <span class="ref-chip">🖼 参考图</span></div>
             <div class="bubble ai">
@@ -356,16 +356,16 @@
         </figure>
         <div class="ai-points reveal">
           <div class="point">
-            <h5>不内置任何密钥</h5>
-            <p>App 永不内置 key 或模型接入,只拉起你自己安装并登录好的 <code>claude</code> CLI。也可以建多份配置,指向兼容 Anthropic 协议的第三方网关。</p>
+            <h5>用你自己的 AI</h5>
+            <p>不用注册新账号、不交额外密钥 —— 接的是你电脑上已经在用的 AI 助手,想换模型、调强度都可以。</p>
           </div>
           <div class="point">
             <h5>从不发原图</h5>
-            <p>交给模型的只是 ≤900px 的降采样代理图与当前参数;原图始终留在本机。</p>
+            <p>AI 看到的只是一张小尺寸预览图和当前参数,原图从头到尾留在你的 Mac 里。</p>
           </div>
           <div class="point">
             <h5>每一步都可撤销</h5>
-            <p>AI 的改动合并进参数空间,和历史树里你手动拧的滑杆没有任何区别 —— 一次 agent 改动 = 一步撤销。</p>
+            <p>AI 的改动和你手动拧的滑杆没有任何区别 —— 一次 AI 改动,就是一步撤销。</p>
           </div>
         </div>
       </div>
@@ -380,11 +380,11 @@
         <div class="card reveal"><h5>预设互通</h5><p>新建预设勾选参数分组,导入导出 Lightroom / Camera Raw 的 <code>.xmp</code>;悬停即在导航器预览。</p></div>
         <div class="card reveal"><h5>合焦点</h5><p>取景器式四角框标出相机记录的对焦点,<kbd>Z</kbd> 直达 1:1 并居中;Canon 眼部追踪实测落框在眼 / 脸。</p></div>
         <div class="card reveal"><h5>相机水印</h5><p>白边 / 黑边信息条:品牌 + 机型 + 镜头 + 曝光参数 + 日期,逐项勾选,预览与成品一致。</p></div>
-        <div class="card reveal"><h5>跟手渲染</h5><p>拖动滑杆先出半分辨率帧,停手补全代理图;放大后自动出全分辨率细节。24MP 全管线 1.8s。</p></div>
+        <div class="card reveal"><h5>跟手渲染</h5><p>拧滑杆立即看到变化,放大看细节也跟得上;一张 2400 万像素照片完整渲染不到两秒。</p></div>
         <div class="card reveal"><h5>工作区</h5><p>左栏文件夹树直选照片,胶片带切图反向同步;最近工作区 / 文件夹一键重开。</p></div>
         <div class="card reveal"><h5>触控板缩放</h5><p>双指捏合以指间为锚、惯性平移、双击 ⇄ 1:1;导航器小框点拖跳转,<kbd>Z</kbd> 切 1:1。</p></div>
-        <div class="card reveal"><h5>导出</h5><p>JPEG / HEIC / PNG / TIFF,品质与长边可控;EXIF 默认保留但去掉 GPS。</p></div>
-        <div class="card reveal"><h5>多 Agent 配置</h5><p>多份命名配置(CLI 路径 + 环境变量),模型与思考强度随选,互不串味。</p></div>
+        <div class="card reveal"><h5>导出</h5><p>JPEG / HEIC / PNG / TIFF,画质与尺寸可控;拍摄信息默认保留、位置默认抹掉。</p></div>
+        <div class="card reveal"><h5>对话留档</h5><p>每张照片的 AI 对话单独保存在照片旁边,随时翻看这张图当初是怎么调的。</p></div>
       </div>
     </div>
   </section>
@@ -392,21 +392,21 @@
   <!-- 上手 -->
   <section class="guide" id="guide">
     <div class="wrap">
-      <h2 class="sec-h">本机构建上手</h2>
-      <p class="sec-sub">没有安装包,没有签名门槛 —— 源码在手,两条命令。</p>
+      <h2 class="sec-h">装到你的 Mac,三步</h2>
+      <p class="sec-sub">没有安装包,两条命令,一次装好。</p>
       <div class="steps">
         <div class="step">
           <span class="step-n">1</span>
-          <div><h5>准备</h5><p>macOS 14+ · Apple silicon · Xcode 命令行工具(<code>swift build</code> 可用)。获取源码后进入 <code>native/</code> 目录。</p></div>
+          <div><h5>准备</h5><p>一台 Apple 芯片、macOS 14 以上的 Mac,装好 Xcode 命令行工具;拿到源码后进入 <code>native/</code> 目录。</p></div>
         </div>
         <div class="step">
           <span class="step-n">2</span>
-          <div><h5>构建</h5><pre><code>./scripts/bundle.sh      # release 构建 → build/LR-AI.app(ad-hoc 签名)
-open build/LR-AI.app      # 或拷到 /Applications</code></pre></div>
+          <div><h5>构建</h5><pre><code>./scripts/bundle.sh      # 构建 LR-AI.app
+open build/LR-AI.app      # 打开,或拖进「应用程序」</code></pre></div>
         </div>
         <div class="step">
           <span class="step-n">3</span>
-          <div><h5>接上 AI(可选)</h5><p>装好并登录本机 <code>claude</code> CLI 即可,App 会自动发现;不装也不影响修图,所有功能照常。</p></div>
+          <div><h5>接上 AI(可选)</h5><p>在电脑上装好并登录 <code>claude</code> 命令行,App 会自动发现;不装也完全不影响修图。</p></div>
         </div>
       </div>
     </div>
@@ -419,27 +419,27 @@ open build/LR-AI.app      # 或拷到 /Applications</code></pre></div>
       <div class="faq-list">
         <details open>
           <summary>它和 Lightroom 是什么关系?</summary>
-          <p>没有任何依赖关系。LR·AI 对齐的是 Lightroom「修改照片」模块的参数空间与交互习惯(约 60 个滑杆、色调曲线、HSL、预设),预设文件 <code>.xmp</code> 可以互导;渲染引擎完全自研 —— AppKit + ImageIO + Accelerate,零第三方依赖,不需要安装 Lightroom 或 Adobe 的任何东西。</p>
+          <p>不需要安装 Lightroom 或 Adobe 的任何东西。LR·AI 沿用的是 Lightroom「修改照片」同一套参数和操作习惯(约 60 个滑杆、色调曲线、HSL、预设),Lightroom 的预设文件 <code>.xmp</code> 可以直接导进来用。</p>
         </details>
         <details>
           <summary>AI 助手会上传我的照片吗?</summary>
-          <p>不会发原图。App 只把 ≤900px 的降采样代理图(原图 / 编辑后 / 参考图)与当前参数写进照片文件夹下的本地临时目录,交给本机的 <code>claude</code> CLI 处理;账号、密钥都是你自己的,App 不内置任何接入。整个过程零网络请求由 App 发起。</p>
+          <p>不会。AI 看到的只是一张小尺寸预览图和当前的调色参数,而且它就跑在你自己的电脑上;原图从头到尾不离开你的 Mac。</p>
         </details>
         <details>
           <summary>会改动我的原片吗?</summary>
-          <p>不会。所有调整只存成参数 JSON,放在照片所在文件夹的隐藏目录 <code>.lrai/</code> 里,改动自动保存;整张图只在导出时渲染,并且导出是另存新文件。删掉 <code>.lrai/</code>,一切如初。</p>
+          <p>不会。所有调整单独记在照片旁边的一份「参数清单」里,自动保存;导出时按参数另存新文件。原片,一个字节都不会动。</p>
         </details>
         <details>
           <summary>支持我的相机 / 格式吗?</summary>
-          <p>相机 RAW 走系统解码器,实测覆盖 CR3 / CR2 / NEF / ARW / DNG 等主流格式,JPEG / PNG / HEIC / WebP / TIFF 也都支持。不确定的话,仓库里的 <code>lrai-check</code> 命令行工具可以直接打印一张图的解码信息与耗时,先验再装。</p>
+          <p>主流相机的 RAW(CR3 / CR2 / NEF / ARW / DNG)和 JPEG / PNG / HEIC / WebP / TIFF 都支持。不确定的话,拖一张进来试一下最快。</p>
+        </details>
+        <details>
+          <summary>修图需要联网吗?</summary>
+          <p>不需要。修图、导出、历史全部在本机完成,断网照常使用;只有 AI 助手会用你本机已登录的 AI,走它自己的网络。</p>
         </details>
         <details>
           <summary>AI 改坏了怎么办?</summary>
-          <p>一次 agent 改动就是历史树里的一步:面板上直接「还原」,或者 <kbd>⌘Z</kbd>;想再试一次就「重新应用」。它拧的滑杆和你拧的滑杆,在历史里地位完全一样。</p>
-        </details>
-        <details>
-          <summary>免费吗?以后会收费吗?</summary>
-          <p>目前从源码构建即可使用全部功能。商业化方案在评估中,有任何决定都会先更新在这个页面。</p>
+          <p>一次 AI 改动就是历史树里的一步:面板上直接「还原」,或者 <kbd>⌘Z</kbd>;想再试一次就「重新应用」。它拧的滑杆和你拧的滑杆,在历史里地位完全一样。</p>
         </details>
       </div>
     </div>
@@ -453,7 +453,7 @@ open build/LR-AI.app      # 或拷到 /Applications</code></pre></div>
       <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#f5f4ed"/><circle cx="16" cy="16" r="9.5" fill="none" stroke="#211f18" stroke-width="2.4"/><circle cx="16" cy="16" r="3.2" fill="#211f18"/></svg>
       <span>LR·AI</span>
     </div>
-    <p>参数化调色工作台 · macOS 14+ / Apple silicon / SwiftPM 零依赖</p>
+    <p>参数化调色工作台 · macOS 14+ · Apple silicon</p>
     <p class="foot-c">© 2026 LR·AI</p>
   </div>
 </footer>
