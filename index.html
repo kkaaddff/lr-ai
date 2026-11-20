@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LR·AI — 不依赖 Lightroom 的参数化调色工作台</title>
+<meta name="description" content="macOS 原生修图 App:自研 Lightroom 式参数空间与渲染引擎,约 60 个滑杆,直读 RAW,不改原片;AI 调色助手由本机 claude CLI 驱动,不上传原图。零第三方依赖。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="LR·AI — 不依赖 Lightroom 的参数化调色工作台">
+<meta property="og:description" content="macOS 原生修图 App:约 60 个滑杆的参数化调色,直读 RAW,不改原片;AI 助手用本机 claude CLI,不上传原图。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23211f18'/%3E%3Ccircle cx='16' cy='16' r='9.5' fill='none' stroke='%23e8b04b' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%23e8b04b'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<!-- 共享 SVG:照片场景(页面所有示意图复用) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="scene">
+      <rect width="800" height="520" fill="#3a4a6b"/>
+      <rect width="800" height="300" fill="url(#sky)"/>
+      <circle cx="560" cy="228" r="46" fill="#f6d9a0"/>
+      <circle cx="560" cy="228" r="70" fill="#f6d9a0" opacity=".22"/>
+      <path d="M0 300 L150 176 L268 258 L392 150 L520 258 L640 190 L800 296 L800 320 L0 320 Z" fill="#585170"/>
+      <path d="M0 320 L120 232 L250 312 L420 210 L560 316 L700 246 L800 322 Z" fill="#3b3550"/>
+      <rect y="318" width="800" height="202" fill="url(#lake)"/>
+      <ellipse cx="560" cy="352" rx="130" ry="26" fill="#eec98c" opacity=".38"/>
+      <ellipse cx="560" cy="420" rx="66" ry="12" fill="#eec98c" opacity=".2"/>
+      <rect y="312" width="800" height="14" fill="#efe7dd" opacity=".14"/>
+      <path d="M0 520 L180 448 L340 502 L520 440 L800 512 L800 520 Z" fill="#241f2e"/>
+      <path d="M120 118 q10 -8 20 0 M168 132 q8 -6 16 0" stroke="#efe7dd" stroke-width="3" fill="none" opacity=".6" stroke-linecap="round"/>
+    </g>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#39507a"/>
+      <stop offset=".55" stop-color="#8a6a78"/>
+      <stop offset="1" stop-color="#d9a06b"/>
+    </linearGradient>
+    <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6d5a5e"/>
+      <stop offset="1" stop-color="#2c2838"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<header class="site-head">
+  <div class="wrap head-in">
+    <a class="logo" href="#top" aria-label="LR·AI">
+      <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#211f18"/><circle cx="16" cy="16" r="9.5" fill="none" stroke="#e8b04b" stroke-width="2.4"/><circle cx="16" cy="16" r="3.2" fill="#e8b04b"/></svg>
+      <span>LR·AI</span>
+    </a>
+    <nav class="nav">
+      <a href="#features">功能</a>
+      <a href="#ai">AI 助手</a>
+      <a href="#guide">上手</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="kicker">macOS 原生 · AppKit + ImageIO + Accelerate</p>
+      <h1>不依赖 Lightroom 的<br>参数化调色工作台</h1>
+      <p class="sub">自研的 Lightroom 式参数空间与渲染引擎,配上由你本机 <code>claude</code> CLI 驱动的调色 / 构图助手。<br>约 60 个滑杆、直读 RAW、不改原片、零第三方依赖。</p>
+      <div class="badges">
+        <span>不改原片</span><span>AI 不上传原图</span><span>macOS 14+ · Apple silicon</span><span>零第三方依赖</span>
+      </div>
+      <div class="cta-row">
+        <a class="btn primary" href="#guide">本机构建上手</a>
+        <a class="btn" href="#features">看看能做什么</a>
+      </div>
+
+      <!-- 界面示意 -->
+      <figure class="app-window reveal" role="img" aria-label="LR·AI 界面示意:左侧文件夹树,中间照片画布,右侧参数面板,底部胶片带">
+        <div class="aw-chrome">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="aw-title">LR·AI — 101Canon · IMG_0421.CR3</span>
+          <span class="aw-toolIcons">
+            <span class="ti on" title="编辑"></span><span class="ti" title="裁剪"></span><span class="ti" title="合焦点"></span>
+          </span>
+        </div>
+        <div class="aw-body">
+          <aside class="aw-side">
+            <div class="aw-side-h">文件夹</div>
+            <ul class="aw-tree">
+              <li class="t-open"><span class="tw"></span>101Canon</li>
+              <li class="t-sub current">IMG_0421.CR3</li>
+              <li class="t-sub">IMG_0422.CR3</li>
+              <li class="t-sub">IMG_0423.CR3</li>
+              <li><span class="tw"></span>2026-秋 · 湖边</li>
+            </ul>
+            <div class="aw-side-h">历史</div>
+            <ul class="aw-hist">
+              <li>导入</li>
+              <li>白平衡 · 曝光</li>
+              <li class="on">色调曲线</li>
+            </ul>
+          </aside>
+          <div class="aw-canvas">
+            <svg viewBox="0 0 800 520" preserveAspectRatio="xMidYMid slice"><use href="#scene"/></svg>
+            <span class="aw-zoom">100%</span>
+          </div>
+          <aside class="aw-panels">
+            <div class="aw-tabs"><span class="on">光</span><span>颜色</span><span>效果</span><span>曲线</span></div>
+            <div class="aw-group">
+              <div class="aw-gh">白平衡</div>
+              <div class="aw-slider"><span>色温</span><i style="--v:.68"></i><b>+12</b></div>
+              <div class="aw-slider"><span>色调</span><i style="--v:.42"></i><b>+4</b></div>
+            </div>
+            <div class="aw-group">
+              <div class="aw-gh">基础</div>
+              <div class="aw-slider"><span>曝光</span><i style="--v:.58"></i><b>+0.35</b></div>
+              <div class="aw-slider"><span>对比度</span><i style="--v:.55"></i><b>+15</b></div>
+              <div class="aw-slider"><span>高光</span><i style="--v:.3"></i><b>−28</b></div>
+              <div class="aw-slider"><span>阴影</span><i style="--v:.72"></i><b>+32</b></div>
+            </div>
+            <div class="aw-curve">
+              <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0 100 L0 100 C30 62 55 30 100 0 L100 100 Z" fill="currentColor" opacity=".12"/>
+                <path d="M0 100 C30 62 55 30 100 0" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                <circle cx="30" cy="62" r="3" fill="currentColor"/><circle cx="55" cy="30" r="3" fill="currentColor"/>
+              </svg>
+              <span class="aw-curve-tag">RGB</span>
+            </div>
+          </aside>
+        </div>
+        <div class="aw-film">
+          <svg viewBox="0 0 800 520"><use href="#scene"/></svg>
+          <svg viewBox="0 0 800 520" style="filter:saturate(.4) brightness(.95)"><use href="#scene"/></svg>
+          <svg viewBox="0 0 800 520" style="filter:hue-rotate(18deg) saturate(1.25)"><use href="#scene"/></svg>
+          <svg viewBox="0 0 800 520" class="sel"><use href="#scene"/></svg>
+          <svg viewBox="0 0 800 520" style="filter:sepia(.45)"><use href="#scene"/></svg>
+          <svg viewBox="0 0 800 520" style="filter:saturate(.55) hue-rotate(-12deg)"><use href="#scene"/></svg>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 数字带 -->
+  <section class="numbers">
+    <div class="wrap nums-in">
+      <div class="num"><b>60</b><span>个滑杆 · 对齐 Lightroom 参数空间</span></div>
+      <div class="num"><b>92.4<span class="unit">dB</span></b><span>引擎移植与参考实现逐位平价</span></div>
+      <div class="num"><b>1.8<span class="unit">s</span></b><span>24MP 全管线热跑(Accelerate)</span></div>
+      <div class="num"><b>0</b><span>第三方依赖 · SwiftPM 构建</span></div>
+    </div>
+  </section>
+
+  <!-- 幕帘对比 -->
+  <section class="curtain-sec">
+    <div class="wrap">
+      <h2 class="sec-h">拖一拖分割线</h2>
+      <p class="sec-sub">左边是原片,右边是编辑后 —— 五种对比视图之一:幕帘对比。App 里按住 <kbd>⌥</kbd> 可以把分割线拖到任何位置。</p>
+      <div class="curtain" id="curtain">
+        <div class="c-after"><svg viewBox="0 0 800 520" preserveAspectRatio="xMidYMid slice"><use href="#scene"/></svg><span class="c-tag right">编辑后</span></div>
+        <div class="c-before"><svg viewBox="0 0 800 520" preserveAspectRatio="xMidYMid slice"><use href="#scene"/></svg><span class="c-tag">原图</span></div>
+        <div class="c-divider" aria-hidden="true"><span class="c-handle">⟷</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 功能分区 -->
+  <section class="features" id="features">
+    <div class="wrap">
+      <h2 class="sec-h">一枚引擎,长在本地</h2>
+      <p class="sec-sub">修图、RAW、AI、历史、批处理,都在这一个原生 App 里;照片不出你的 Mac。</p>
+
+      <article class="feat reveal">
+        <div class="f-text">
+          <h3>修图引擎</h3>
+          <h4>一枚引擎,六十个滑杆</h4>
+          <p>白平衡、基础、色调曲线(RGB 分通道)、HSL、颜色分级、校准 —— 参数空间与 Lightroom「修改照片」一一对应。单击加点、拖出删点的 Pchip 曲线,分区滑杆全部程序生成。</p>
+          <ul class="ticks">
+            <li>裁剪与拉直,三分线 + 比例锁定</li>
+            <li>编辑后 / 原图 / 左右 / 上下 / 幕帘,五种对比视图</li>
+            <li>按住 <kbd>\</kbd> 临时看原图</li>
+          </ul>
+        </div>
+        <div class="f-visual">
+          <figure class="mock sliders-mock" role="img" aria-label="参数面板示意:分区滑杆与色调曲线">
+            <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">修改照片</span></div>
+            <div class="sl-groups">
+              <div class="aw-group">
+                <div class="aw-gh">色调曲线</div>
+                <div class="curve-box">
+                  <svg viewBox="0 0 120 90">
+                    <line x1="0" y1="90" x2="120" y2="0" stroke="currentColor" opacity=".18" stroke-dasharray="3 3"/>
+                    <path d="M0 90 C34 58 58 26 120 0" fill="none" stroke="currentColor" stroke-width="2.4"/>
+                    <circle cx="34" cy="58" r="2.8" fill="currentColor"/><circle cx="58" cy="26" r="2.8" fill="currentColor"/><circle cx="88" cy="9" r="2.8" fill="currentColor"/>
+                  </svg>
+                  <span class="ch-tabs"><b class="on">RGB</b><b>R</b><b>G</b><b>B</b></span>
+                </div>
+              </div>
+              <div class="aw-group">
+                <div class="aw-gh">HSL · 颜色</div>
+                <div class="hsl-row"><i style="--h:8"></i><i style="--h:36"></i><i style="--h:60"></i><i style="--h:130"></i><i style="--h:180"></i><i style="--h:220"></i><i style="--h:270"></i><i style="--h:320"></i></div>
+                <div class="aw-slider"><span>饱和度</span><i style="--v:.6"></i><b>+18</b></div>
+                <div class="aw-slider"><span>明度</span><i style="--v:.47"></i><b>+6</b></div>
+              </div>
+              <div class="aw-group">
+                <div class="aw-gh">基础</div>
+                <div class="aw-slider"><span>高光</span><i style="--v:.3"></i><b>−28</b></div>
+                <div class="aw-slider"><span>阴影</span><i style="--v:.72"></i><b>+32</b></div>
+                <div class="aw-slider"><span>白色</span><i style="--v:.5"></i><b>+9</b></div>
+                <div class="aw-slider"><span>黑色</span><i style="--v:.44"></i><b>−6</b></div>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      <article class="feat flip reveal">
+        <div class="f-text">
+          <h3>无损流程</h3>
+          <h4>原片永远是原片</h4>
+          <p>所有调整只是一份参数 JSON,存进照片所在文件夹的隐藏目录 <code>.lrai/</code>,改动自动保存;整张图只在导出的那一刻才渲染。删掉 <code>.lrai/</code>,一切如初。</p>
+          <ul class="ticks">
+            <li>参数、AI 对话、历史全在本地</li>
+            <li>导出 JPEG / HEIC / PNG / TIFF,可保留 EXIF(默认去 GPS)</li>
+            <li>相机水印:白边 / 黑边信息条,内容逐项勾选</li>
+          </ul>
+        </div>
+        <div class="f-visual">
+          <figure class="mock files-mock" role="img" aria-label="无损流程示意:原片与参数 JSON 分开存放,导出时才渲染">
+            <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">照片文件夹</span></div>
+            <div class="files-flow">
+              <div class="file-card">
+                <svg viewBox="0 0 800 520"><use href="#scene"/></svg>
+                <span>IMG_0421.CR3<small>原片 · 从不改动</small></span>
+              </div>
+              <div class="flow-arrow">＋</div>
+              <div class="file-card code-card">
+                <pre>.lrai/
+  params.json   → 曝光 +0.35
+                高光 −28
+                阴影 +32
+                曲线 …</pre>
+                <span>参数 · 自动保存<small>导出时才渲染整图</small></span>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      <article class="feat reveal">
+        <div class="f-text">
+          <h3>直读 RAW</h3>
+          <h4>系统解码器,不用装任何库</h4>
+          <p>CR3 / CR2 / NEF / ARW / DNG 相机 RAW,加上 JPEG / PNG / HEIC / WebP / TIFF,全部走系统解码器;EXIF 方向自动应用,完整元数据 <kbd>⌘I</kbd> 一屏看完。</p>
+          <ul class="ticks">
+            <li>合焦点显示:读相机记录的对焦框,Canon 眼部追踪实测落框在眼 / 脸</li>
+            <li>没有对焦数据时,按清晰度估计最清晰区域(虚线框)</li>
+            <li><code>lrai-check</code> 命令行工具,先验证你的片子再说话</li>
+          </ul>
+        </div>
+        <div class="f-visual">
+          <figure class="mock raw-mock" role="img" aria-label="RAW 格式与 EXIF 信息示意">
+            <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">IMG_0421.CR3 · 6000×4000</span></div>
+            <div class="raw-body">
+              <div class="raw-photo">
+                <svg viewBox="0 0 800 520"><use href="#scene"/></svg>
+                <span class="focus-box" aria-hidden="true"></span>
+              </div>
+              <div class="fmt-chips">
+                <b>CR3</b><b>CR2</b><b>NEF</b><b>ARW</b><b>DNG</b><b>HEIC</b><b>JPEG</b><b>WebP</b><b>TIFF</b>
+              </div>
+              <div class="exif-line">Canon EOS R8 · RF 24-105mm · f/4 1/250s ISO 400 · 24mm</div>
+            </div>
+          </figure>
+        </div>
+      </article>
+
+      <article class="feat flip reveal">
+        <div class="f-text">
+          <h3>历史树</h3>
+          <h4>撤销之后再改,长出新的枝</h4>
+          <p>每张照片一棵历史树,每次改动是一个节点;800 毫秒内的连续拖动合并成一步,拖回原值自动撤掉。回到任何一步继续调,旧分支不会丢 —— 大胆试,不迷路。</p>
+          <ul class="ticks">
+            <li><kbd>⌘Z</kbd> / <kbd>⇧⌘Z</kbd> 撤销重做,head 在树上移动</li>
+            <li>AI 的每次改动也只是历史里的一步</li>
+          </ul>
+        </div>
+        <div class="f-visual">
+          <figure class="mock tree-mock" role="img" aria-label="编辑历史树示意,当前停在色调曲线一步">
+            <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">历史 · IMG_0421</span></div>
+            <svg class="tree-svg" viewBox="0 0 320 210">
+              <path d="M30 40 H90" class="tl"/><path d="M90 40 H150 V75" class="tl"/><path d="M150 75 H210" class="tl"/><path d="M150 75 V130 H210" class="tl old"/><path d="M210 75 H268" class="tl"/><path d="M268 75 H300 V40" class="tl old"/>
+              <circle cx="30" cy="40" r="7" class="tn"/><circle cx="90" cy="40" r="7" class="tn"/><circle cx="150" cy="75" r="7" class="tn"/><circle cx="210" cy="130" r="7" class="tn old"/><circle cx="210" cy="75" r="7" class="tn"/><circle cx="268" cy="75" r="9" class="tn head"/><circle cx="300" cy="40" r="7" class="tn old"/>
+              <text x="30" y="24" class="tt" text-anchor="middle">导入</text>
+              <text x="96" y="24" class="tt" text-anchor="middle">白平衡</text>
+              <text x="150" y="103" class="tt" text-anchor="middle">曝光</text>
+              <text x="216" y="158" class="tt old" text-anchor="middle">裁剪(旧)</text>
+              <text x="216" y="103" class="tt" text-anchor="middle">HSL</text>
+              <text x="268" y="99" class="tt strong" text-anchor="middle">色调曲线 ▸</text>
+              <text x="304" y="24" class="tt old" text-anchor="middle">旧试验</text>
+            </svg>
+          </figure>
+        </div>
+      </article>
+
+      <article class="feat reveal">
+        <div class="f-text">
+          <h3>批处理</h3>
+          <h4>选一批,一个风格</h4>
+          <p>多选照片逐张处理或统一风格;同步设置、匹配曝光与白平衡,把一组片子先「拉平」再统一调。可以整批撤销,也可以逐张复查微调。</p>
+          <ul class="ticks">
+            <li>匹配曝光 / 白平衡,组内对齐</li>
+            <li>整批撤销,逐张复查</li>
+          </ul>
+        </div>
+        <div class="f-visual">
+          <figure class="mock batch-mock" role="img" aria-label="批处理示意:多张照片统一风格、匹配曝光">
+            <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">批处理 · 已选 6 张</span></div>
+            <div class="batch-strip">
+              <svg viewBox="0 0 800 520"><use href="#scene"/></svg>
+              <svg viewBox="0 0 800 520" style="filter:saturate(.35) brightness(.9)"><use href="#scene"/></svg>
+              <svg viewBox="0 0 800 520" style="filter:saturate(.5) brightness(1.02)"><use href="#scene"/></svg>
+              <svg viewBox="0 0 800 520"><use href="#scene"/></svg>
+              <svg viewBox="0 0 800 520" style="filter:saturate(.55)"><use href="#scene"/></svg>
+              <svg viewBox="0 0 800 520" style="filter:saturate(.3) brightness(.96)"><use href="#scene"/></svg>
+            </div>
+            <div class="batch-ops">
+              <span class="op on">统一风格 ✓</span><span class="op on">匹配曝光 ✓</span><span class="op">匹配白平衡</span><span class="op">逐张复查</span>
+            </div>
+          </figure>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- AI 助手 -->
+  <section class="ai-sec" id="ai">
+    <div class="wrap">
+      <h2 class="sec-h">一句话,调一次色</h2>
+      <p class="sec-sub">「提亮阴影」「帮我重新构图」—— 也可以拖一张参考图进去,说「照这个感觉调」。App 拉起你本机的 <code>claude</code> CLI(headless 模式),实时看到它的思考与每一步操作。</p>
+
+      <div class="ai-grid">
+        <figure class="mock chat-mock reveal" role="img" aria-label="AI 助手对话示意">
+          <div class="mk-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="mk-title">调色助手 · claude(本机登录)</span></div>
+          <div class="chat-flow">
+            <div class="bubble user">提亮阴影,整体再暖一点 <span class="ref-chip">🖼 参考图</span></div>
+            <div class="bubble ai">
+              <div class="ai-steps">
+                <span class="st done">✓ 读取当前参数</span>
+                <span class="st done">✓ 分析参考图:暖调、低对比</span>
+                <span class="st done">✓ 阴影 +32 · 色温 +12</span>
+                <span class="st run">▸ 调整色调曲线…</span>
+              </div>
+              <div class="ai-done">已应用 · 这是历史里的一步,随时 <b>还原</b> 或 <b>重新应用</b></div>
+            </div>
+          </div>
+          <div class="chat-input">用一句话描述你想要的感觉…<span class="send">↑</span></div>
+        </figure>
+        <div class="ai-points reveal">
+          <div class="point">
+            <h5>不内置任何密钥</h5>
+            <p>App 永不内置 key 或模型接入,只拉起你自己安装并登录好的 <code>claude</code> CLI。也可以建多份配置,指向兼容 Anthropic 协议的第三方网关。</p>
+          </div>
+          <div class="point">
+            <h5>从不发原图</h5>
+            <p>交给模型的只是 ≤900px 的降采样代理图与当前参数;原图始终留在本机。</p>
+          </div>
+          <div class="point">
+            <h5>每一步都可撤销</h5>
+            <p>AI 的改动合并进参数空间,和历史树里你手动拧的滑杆没有任何区别 —— 一次 agent 改动 = 一步撤销。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 功能网格 -->
+  <section class="grid-sec">
+    <div class="wrap">
+      <h2 class="sec-h">还有这些,顺手就有</h2>
+      <div class="cards">
+        <div class="card reveal"><h5>预设互通</h5><p>新建预设勾选参数分组,导入导出 Lightroom / Camera Raw 的 <code>.xmp</code>;悬停即在导航器预览。</p></div>
+        <div class="card reveal"><h5>合焦点</h5><p>取景器式四角框标出相机记录的对焦点,<kbd>Z</kbd> 直达 1:1 并居中;Canon 眼部追踪实测落框在眼 / 脸。</p></div>
+        <div class="card reveal"><h5>相机水印</h5><p>白边 / 黑边信息条:品牌 + 机型 + 镜头 + 曝光参数 + 日期,逐项勾选,预览与成品一致。</p></div>
+        <div class="card reveal"><h5>跟手渲染</h5><p>拖动滑杆先出半分辨率帧,停手补全代理图;放大后自动出全分辨率细节。24MP 全管线 1.8s。</p></div>
+        <div class="card reveal"><h5>工作区</h5><p>左栏文件夹树直选照片,胶片带切图反向同步;最近工作区 / 文件夹一键重开。</p></div>
+        <div class="card reveal"><h5>触控板缩放</h5><p>双指捏合以指间为锚、惯性平移、双击 ⇄ 1:1;导航器小框点拖跳转,<kbd>Z</kbd> 切 1:1。</p></div>
+        <div class="card reveal"><h5>导出</h5><p>JPEG / HEIC / PNG / TIFF,品质与长边可控;EXIF 默认保留但去掉 GPS。</p></div>
+        <div class="card reveal"><h5>多 Agent 配置</h5><p>多份命名配置(CLI 路径 + 环境变量),模型与思考强度随选,互不串味。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 上手 -->
+  <section class="guide" id="guide">
+    <div class="wrap">
+      <h2 class="sec-h">本机构建上手</h2>
+      <p class="sec-sub">没有安装包,没有签名门槛 —— 源码在手,两条命令。</p>
+      <div class="steps">
+        <div class="step">
+          <span class="step-n">1</span>
+          <div><h5>准备</h5><p>macOS 14+ · Apple silicon · Xcode 命令行工具(<code>swift build</code> 可用)。获取源码后进入 <code>native/</code> 目录。</p></div>
+        </div>
+        <div class="step">
+          <span class="step-n">2</span>
+          <div><h5>构建</h5><pre><code>./scripts/bundle.sh      # release 构建 → build/LR-AI.app(ad-hoc 签名)
+open build/LR-AI.app      # 或拷到 /Applications</code></pre></div>
+        </div>
+        <div class="step">
+          <span class="step-n">3</span>
+          <div><h5>接上 AI(可选)</h5><p>装好并登录本机 <code>claude</code> CLI 即可,App 会自动发现;不装也不影响修图,所有功能照常。</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <h2 class="sec-h">你会关心的事</h2>
+      <div class="faq-list">
+        <details open>
+          <summary>它和 Lightroom 是什么关系?</summary>
+          <p>没有任何依赖关系。LR·AI 对齐的是 Lightroom「修改照片」模块的参数空间与交互习惯(约 60 个滑杆、色调曲线、HSL、预设),预设文件 <code>.xmp</code> 可以互导;渲染引擎完全自研 —— AppKit + ImageIO + Accelerate,零第三方依赖,不需要安装 Lightroom 或 Adobe 的任何东西。</p>
+        </details>
+        <details>
+          <summary>AI 助手会上传我的照片吗?</summary>
+          <p>不会发原图。App 只把 ≤900px 的降采样代理图(原图 / 编辑后 / 参考图)与当前参数写进照片文件夹下的本地临时目录,交给本机的 <code>claude</code> CLI 处理;账号、密钥都是你自己的,App 不内置任何接入。整个过程零网络请求由 App 发起。</p>
+        </details>
+        <details>
+          <summary>会改动我的原片吗?</summary>
+          <p>不会。所有调整只存成参数 JSON,放在照片所在文件夹的隐藏目录 <code>.lrai/</code> 里,改动自动保存;整张图只在导出时渲染,并且导出是另存新文件。删掉 <code>.lrai/</code>,一切如初。</p>
+        </details>
+        <details>
+          <summary>支持我的相机 / 格式吗?</summary>
+          <p>相机 RAW 走系统解码器,实测覆盖 CR3 / CR2 / NEF / ARW / DNG 等主流格式,JPEG / PNG / HEIC / WebP / TIFF 也都支持。不确定的话,仓库里的 <code>lrai-check</code> 命令行工具可以直接打印一张图的解码信息与耗时,先验再装。</p>
+        </details>
+        <details>
+          <summary>AI 改坏了怎么办?</summary>
+          <p>一次 agent 改动就是历史树里的一步:面板上直接「还原」,或者 <kbd>⌘Z</kbd>;想再试一次就「重新应用」。它拧的滑杆和你拧的滑杆,在历史里地位完全一样。</p>
+        </details>
+        <details>
+          <summary>免费吗?以后会收费吗?</summary>
+          <p>目前从源码构建即可使用全部功能。商业化方案在评估中,有任何决定都会先更新在这个页面。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-in">
+    <div class="foot-brand">
+      <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#f5f4ed"/><circle cx="16" cy="16" r="9.5" fill="none" stroke="#211f18" stroke-width="2.4"/><circle cx="16" cy="16" r="3.2" fill="#211f18"/></svg>
+      <span>LR·AI</span>
+    </div>
+    <p>参数化调色工作台 · macOS 14+ / Apple silicon / SwiftPM 零依赖</p>
+    <p class="foot-c">© 2026 LR·AI</p>
+  </div>
+</footer>
+
+<script>
+// 进场渐显
+const io = new IntersectionObserver(es => {
+  es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: .12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// 幕帘对比拖动
+(function () {
+  const c = document.getElementById('curtain');
+  if (!c) return;
+  const before = c.querySelector('.c-before');
+  const divider = c.querySelector('.c-divider');
+  let dragging = false;
+  const set = x => {
+    const r = c.getBoundingClientRect();
+    const p = Math.min(.96, Math.max(.04, (x - r.left) / r.width));
+    before.style.clipPath = 'inset(0 ' + (100 - p * 100) + '% 0 0)';
+    divider.style.left = (p * 100) + '%';
+  };
+  c.addEventListener('pointerdown', e => { dragging = true; c.setPointerCapture(e.pointerId); set(e.clientX); });
+  c.addEventListener('pointermove', e => { if (dragging) set(e.clientX); });
+  c.addEventListener('pointerup', () => dragging = false);
+  c.addEventListener('pointercancel', () => dragging = false);
+  // 初始位置
+  set(c.getBoundingClientRect().left + c.getBoundingClientRect().width * .42);
+})();
+</script>
+</body>
+</html>
