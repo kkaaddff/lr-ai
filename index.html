@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LR·AI — 不依赖 Lightroom 的参数化调色工作台</title>
+<title>Safelight — 不依赖 Lightroom 的参数化调色工作台</title>
 <meta name="description" content="macOS 原生修图 App:Lightroom 式参数化调色,约 60 个滑杆,直读相机 RAW,不改原片;AI 调色助手跑在你自己的 Mac 上,不上传原图。">
 <meta property="og:type" content="website">
-<meta property="og:title" content="LR·AI — 不依赖 Lightroom 的参数化调色工作台">
+<meta property="og:title" content="Safelight — 不依赖 Lightroom 的参数化调色工作台">
 <meta property="og:description" content="macOS 原生修图 App:约 60 个滑杆的参数化调色,直读 RAW,不改原片;AI 助手跑在本机,不上传原图。">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23211f18'/%3E%3Ccircle cx='16' cy='16' r='9.5' fill='none' stroke='%23e8b04b' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%23e8b04b'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="./style.css">
@@ -44,9 +44,9 @@
 
 <header class="site-head">
   <div class="wrap head-in">
-    <a class="logo" href="#top" aria-label="LR·AI">
+    <a class="logo" href="#top" aria-label="Safelight">
       <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#211f18"/><circle cx="16" cy="16" r="9.5" fill="none" stroke="#e8b04b" stroke-width="2.4"/><circle cx="16" cy="16" r="3.2" fill="#e8b04b"/></svg>
-      <span>LR·AI</span>
+      <span>Safelight</span>
     </a>
     <nav class="nav">
       <a href="#features">功能</a>
@@ -62,7 +62,7 @@
   <!-- Hero -->
   <section class="hero">
     <div class="wrap">
-      <p class="kicker">macOS 原生 · 参数化调色工作台</p>
+      <p class="kicker">Safelight · macOS 原生 · 参数化调色工作台</p>
       <h1>不依赖 Lightroom 的<br>参数化调色工作台</h1>
       <p class="sub">Lightroom 式的调色体验,加上听得懂一句话的 AI 助手。<br>约 60 个滑杆、直读相机 RAW、原片永远不被改动。</p>
       <div class="badges">
@@ -74,10 +74,10 @@
       </div>
 
       <!-- 界面示意 -->
-      <figure class="app-window reveal" role="img" aria-label="LR·AI 界面示意:左侧文件夹树,中间照片画布,右侧参数面板,底部胶片带">
+      <figure class="app-window reveal" role="img" aria-label="Safelight 界面示意:左侧文件夹树,中间照片画布,右侧参数面板,底部胶片带">
         <div class="aw-chrome">
           <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-          <span class="aw-title">LR·AI — 101Canon · IMG_0421.CR3</span>
+          <span class="aw-title">Safelight — 101Canon · IMG_0421.CR3</span>
           <span class="aw-toolIcons">
             <span class="ti on" title="编辑"></span><span class="ti" title="裁剪"></span><span class="ti" title="合焦点"></span>
           </span>
@@ -357,11 +357,11 @@
         <div class="ai-points reveal">
           <div class="point">
             <h5>用你自己的 AI</h5>
-            <p>不用注册新账号、不交额外密钥 —— 接的是你电脑上已经在用的 AI 助手,想换模型、调强度都可以。</p>
+            <p>App 不内置任何密钥 —— 调色接的是你电脑上已经在用的 AI 助手,想换模型、调强度都可以;生成式修图直连你自己的火山方舟账户。</p>
           </div>
           <div class="point">
-            <h5>从不发原图</h5>
-            <p>AI 看到的只是一张小尺寸预览图和当前参数,原图从头到尾留在你的 Mac 里。</p>
+            <h5>原图留在本机</h5>
+            <p>调色时 AI 只看一张小尺寸预览图和当前参数;生成时发出去的是编辑后的画面(460 万像素以内)。原文件从头到尾留在你的 Mac 里,生成结果另存为新照片。</p>
           </div>
           <div class="point">
             <h5>每一步都可撤销</h5>
@@ -384,6 +384,10 @@
         <div class="card reveal"><h5>工作区</h5><p>左栏文件夹树直选照片,胶片带切图反向同步;最近工作区 / 文件夹一键重开。</p></div>
         <div class="card reveal"><h5>触控板缩放</h5><p>双指捏合以指间为锚、惯性平移、双击 ⇄ 1:1;导航器小框点拖跳转,<kbd>Z</kbd> 切 1:1。</p></div>
         <div class="card reveal"><h5>导出</h5><p>JPEG / HEIC / PNG / TIFF,画质与尺寸可控;拍摄信息默认保留、位置默认抹掉。</p></div>
+        <div class="card reveal"><h5>生成式修图</h5><p>在画布上框出位置,一句话去杂物、换天、扩图;结果先作候选对比,满意再另存为新照片,原片不动。</p></div>
+        <div class="card reveal"><h5>透明背景</h5><p>抠好的主体可选透明 / 纯色 / 影棚背景布,随时改;导出 PNG / TIFF 可保留透明。</p></div>
+        <div class="card reveal"><h5>翻图跟手</h5><p>按住 <kbd>←</kbd> <kbd>→</kbd> 主图跟着胶片带走;相邻照片后台预先解码,一张张翻约 40 毫秒出图。</p></div>
+        <div class="card reveal"><h5>暗房界面</h5><p>暖炭灰界面配琥珀点缀,照片四周是近乎中性的画布,看色不被界面干扰。</p></div>
         <div class="card reveal"><h5>对话留档</h5><p>每张照片的 AI 对话单独保存在照片旁边,随时翻看这张图当初是怎么调的。</p></div>
       </div>
     </div>
@@ -401,12 +405,12 @@
         </div>
         <div class="step">
           <span class="step-n">2</span>
-          <div><h5>构建</h5><pre><code>./scripts/bundle.sh      # 构建 LR-AI.app
-open build/LR-AI.app      # 打开,或拖进「应用程序」</code></pre></div>
+          <div><h5>构建</h5><pre><code>./scripts/bundle.sh      # 构建 Safelight.app
+open build/Safelight.app      # 打开,或拖进「应用程序」</code></pre></div>
         </div>
         <div class="step">
           <span class="step-n">3</span>
-          <div><h5>接上 AI(可选)</h5><p>在电脑上装好并登录 <code>claude</code> 命令行,App 会自动发现;不装也完全不影响修图。</p></div>
+          <div><h5>接上 AI(可选)</h5><p>在电脑上装好并登录 <code>claude</code> 命令行,App 会自动发现;想用生成式修图,在助手里切到「生成」,填上自己的火山方舟 API key。都不装也完全不影响修图。</p></div>
         </div>
       </div>
     </div>
@@ -419,7 +423,11 @@ open build/LR-AI.app      # 打开,或拖进「应用程序」</code></pre></div
       <div class="faq-list">
         <details open>
           <summary>它和 Lightroom 是什么关系?</summary>
-          <p>不需要安装 Lightroom 或 Adobe 的任何东西。LR·AI 沿用的是 Lightroom「修改照片」同一套参数和操作习惯(约 60 个滑杆、色调曲线、HSL、预设),Lightroom 的预设文件 <code>.xmp</code> 可以直接导进来用。</p>
+          <p>不需要安装 Lightroom 或 Adobe 的任何东西。Safelight 沿用的是 Lightroom「修改照片」同一套参数和操作习惯(约 60 个滑杆、色调曲线、HSL、预设),Lightroom 的预设文件 <code>.xmp</code> 可以直接导进来用。</p>
+        </details>
+        <details>
+          <summary>为什么叫 Safelight?</summary>
+          <p>Safelight 是「安全灯」:暗房里冲洗照片时,唯一亮着的那盏琥珀色小灯 —— 它照亮你的手,却不会让相纸曝光。Safelight 想做的也是这件事:在你调色时安静地帮把手,原片永远不被改动。</p>
         </details>
         <details>
           <summary>AI 助手会上传我的照片吗?</summary>
@@ -451,10 +459,10 @@ open build/LR-AI.app      # 打开,或拖进「应用程序」</code></pre></div
   <div class="wrap foot-in">
     <div class="foot-brand">
       <svg viewBox="0 0 32 32" width="22" height="22" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#f5f4ed"/><circle cx="16" cy="16" r="9.5" fill="none" stroke="#211f18" stroke-width="2.4"/><circle cx="16" cy="16" r="3.2" fill="#211f18"/></svg>
-      <span>LR·AI</span>
+      <span>Safelight</span>
     </div>
     <p>参数化调色工作台 · macOS 14+ · Apple silicon</p>
-    <p class="foot-c">© 2026 LR·AI</p>
+    <p class="foot-c">© 2026 Safelight</p>
   </div>
 </footer>
 
